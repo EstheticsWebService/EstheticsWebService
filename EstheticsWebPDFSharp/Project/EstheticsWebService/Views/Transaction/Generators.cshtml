@@ -1,0 +1,152 @@
+﻿@{
+    ViewData["Title"] = "Transaction";
+}
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <title>Пупо-наебатор 9000</title>
+</head>
+<body>
+
+    <form method="post" style="display:grid; grid-template-columns:400px 250px" target="_blank" action="/transaction/screen">
+        <div>
+            <label style="font-size: 20px; font-weight:bold;">Дата:</label><br />
+            <input type="date" name="date" id="datescreen" required value="@DateTime.Now.ToString("yyyy-MM-dd")" /><br /><br />
+            <label style="font-size: 20px; font-weight:bold;">Цена:</label><br />
+            <input type="number" name="price" id="pricescreen" step="0.01" required value="4.99" /><br /><br />
+            <label style="font-size: 20px;  font-weight:bold;">Номер телефона:</label><br />
+            <input type="tel" name="phoneNumber" required id="phoneNumberscreen" value="+70000000000" /><br /><br />
+            <label style="font-size: 20px; font-weight:bold;">Комментарий:</label><br />
+            <input type="text" name="comment" required id="commentscreen" value="Poplatok Brawl Stars ..." /><br /><br />
+            <label style="font-size: 20px; font-weight:bold;">Отсрочка дней:</label><br />
+            <input type="number" name="delay" id="delayscreen" required value="3" /><br /><br />
+            <label style="font-size: 20px; font-weight:bold;">Владелец аккаунта:</label><br />
+            <input type="text" name="accountOwner" id="accountOwnerscreen" required value="VS Solutoin r.s.o" /><br /><br />
+            <input type="checkbox" name="isProvided" value="1" checked id="isProvidedscreen" class="secondEl" disabled />
+            <label style="font-size: 20px; font-weight:bold;">Подтвердена ли операция</label>
+            <label></label>
+            <input type="submit" style="font-weight:bold;
+border-radius: 5px; padding: 16px 50px; font-size: 20px;" value="Сгенерировать Скрин" /><br /><br>
+        </div>
+        <div>
+            <label style="font-size: 20px; font-weight:bold;">Дата:</label><br />
+            <input type="date" disabled class="secondEl" name="secondLine[]" id="secondLine" value="@DateTime.Now.ToString("yyyy-MM-dd")" /><br /><br />
+            <label style="font-size: 20px; font-weight:bold;">Цена:</label><br />
+            <input type="number" disabled class="secondEl" name="secondLine[]" id="pricescreen" step="0.01" value="4.99" /><br /><br />
+            <label style="font-size: 20px;  font-weight:bold;">Номер телефона:</label><br />
+            <input type="tel" disabled class="secondEl" name="secondLine[]" id="phoneNumberscreen" value="+70000000000" /><br /><br />
+            <label style="font-size: 20px; font-weight:bold;">Комментарий:</label><br />
+            <input type="text" disabled class="secondEl" name="secondLine[]" required id="commentscreen" value="Poplatok Brawl Stars ..." /><br /><br />
+            <label style="font-size: 20px; font-weight:bold;">Отсрочка дней:</label><br />
+            <input type="number" disabled class="secondEl" name="secondLine[]" id="delayscreen" value="3" /><br /><br />
+            <label style="font-size: 20px; font-weight:bold;">Конечная сумма:</label><br />
+            <input type="number" name="secondLine[]" id="pricescreen" step="0.01" value="489.74" /><br /><br />
+            <input type="checkbox" name="useSecondLine" value="1" onchange="toggleSecondLine()" id="useSecondLine" />
+            <label style="font-size: 20px; font-weight:bold;">Добавить вторую строку</label>
+        </div>
+
+
+    </form>
+    <script>
+        function toggleSecondLine() {
+
+            var chbox = document.getElementById('useSecondLine');
+            var elements = document.getElementsByClassName("secondEl");
+            if ($("#useSecondLine").prop("checked") == true) {
+                $('.secondEl').each(function (index, elem) {
+                    console.log($(elem).attr('disabled', false));
+                });
+            }
+            else {
+                $('.secondEl').each(function (index, elem) {
+                    console.log($(elem).attr('disabled', true));
+                });
+            }
+
+        }
+
+    </script>
+
+    @{
+        ViewData["Button"] = "Сгенерировать PDF";
+    }
+
+    <form method="post" action="/transaction/CreatePDF">
+        <label style="font-size: 20px; font-weight:bold;">Дата:</label><br />
+        <input type="date" required name="date" id="datepdf" value="@DateTime.Now.ToString("yyyy-MM-dd")" /><br /><br />
+        <label style="font-size: 20px; font-weight:bold;">Номер:</label><br />
+        <input type="tel" required name="number" id="numberpdf" value="+70000000000" /><br /><br />
+        <label style="font-size: 20px; font-weight:bold;">Сумма:</label><br />
+        <input type="number" required name="sum" id="sum" size="12" value="4.99" step="0.01" />
+        <input type="text" required name="currency" id="currencypdf" size="2" value="EUR" /><br /><br />
+        <label style="font-size: 20px; font-weight:bold;">Отсрочка:</label><br />
+        <input type="number" required name="delay" id="delaypdf" value="3" /><br /><br />
+        <label style="font-size: 20px; font-weight:bold;">Владелец аккаунта:</label><br />
+        <input type="text" name="accountOwner" id="accountOwnerpdf" required value="VS Solutoin r.s.o" /><br /><br />
+        <label style="font-size: 20px; font-weight:bold;">SWIFT:</label><br />
+        <input type="text" name="swift" id="swift" required value="PBANRU4E" /><br /><br />
+        <input type="text" name="title" id="titlepdf" required value="@PdfHelper.NameGenerator.GenerateName()" /><br /><br />
+        <input type="submit" style="font-weight:bold; border-radius: 5px; padding: 16px 50px; font-size: 20px;"
+               value="@ViewData["Button"]" id="sendButton" />
+
+    </form>
+
+
+
+
+    <form method="post" target="_blank" action="/transaction/check">
+        <label style="font-size: 20px; font-weight:bold;">Дата:</label><br />
+        <input type="date" name="dateOfCheck" required id="dateOfCheck" value="@DateTime.Now.ToString("yyyy-MM-dd")" /><br /><br />
+        <label style="font-size: 20px; font-weight:bold;">Время:</label><br />
+        <input type="time" name="time" required id="time" value="@DateTime.Now.ToString("HH:mm")" /><br /><br />
+        <label style="font-size: 20px; font-weight:bold;">Доп. время:</label><br />
+        <input type="number" name="additionalTime" required id="additionalTime" value="0" size="2" /><br /><br />
+        <label style="font-size: 20px; font-weight:bold;">4 цифры:  </label> <br>
+        <input type="number" size="4" max="9999" required name="fourDigits" id="fourDigits" value="2222" maxlength="4">
+        <label></label>
+        <select name="cardOrAccount" required id="cardOrAccount">
+            <option value="СЧЕТА">СЧЕТ</option>
+            <option value="КАРТЫ">КАРТА</option>
+        </select>
+        <br><br>
+        <label style="font-size: 20px; font-weight:bold;">Cумма операции:</label><br />
+        <input type="number" size="12" required name="operationSum" id="operationSum" value="1032.02" step="0.01">
+        <label>  </label>
+        <select name="currency" required id="currency">
+            <option value="RUB">RUB</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="UAH">UAH</option>
+            <option value="BYR">BYR</option>
+            <option value="KZT">KZT</option>
+        </select> <br /><br>
+
+
+        <label></label>
+        <label style="font-size: 20px; font-weight:bold;">Код авторизации:</label><br />
+
+        <label></label>
+        <input type="number" value="9486742" size="12" required name="authCode" id="authCode" > <br> <br>
+        <b>
+            <label></label>
+            <input type="submit" style="font-weight:bold;
+border-radius: 5px; padding: 16px 50px; font-size: 20px;" value="Сгенерировать Чек" /><br /><br>
+        </b>
+    </form>
+
+
+
+
+    <style>
+        body {
+            background: url("/pupa.png") no-repeat;
+            position: relative;
+            left: 40px;
+            right: auto;
+            top: 30px;
+            overflow-x: hidden;
+        }
+    </style>
+</body>
+
+</html>
